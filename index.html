@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDMS – Dento-Medical Society Rwanda</title>
+    <style>
+        :root {
+            /* Color System - Light Mode (Default) */
+            --primary: #0D5C9F;
+            --primary-light: #3a8cd1;
+            --navy: #0B1F3A;
+            --teal: #1E8E89;
+            --yellow: #F2C94C;
+            --green: #2E7D32;
+            --bg-light: #F7FAFC;
+            --text-main: #0F172A;
+            --text-muted: #5B6B7A;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --header-bg: rgba(247, 250, 252, 0.8);
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+            --glass-blur: blur(12px);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-light: #0F172A;
+            --text-main: #E5EEF8;
+            --text-muted: #9FB0C3;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --header-bg: rgba(15, 23, 42, 0.8);
+            --shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(13, 92, 159, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(13, 92, 159, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-blue { background: rgba(13, 92, 159, 0.1); color: var(--primary); }
+        .badge-teal { background: rgba(30, 142, 137, 0.1); color: var(--teal); }
+
+        h1, h2, h3 { line-height: 1.2; font-weight: 800; }
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- NAVBAR --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
+            padding: 1rem 0;
+        }
+
+        header.scrolled {
+            background: var(--header-bg);
+            backdrop-filter: var(--glass-blur);
+            box-shadow: var(--shadow);
+            padding: 0.6rem 0;
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+
+        .logo img {
+            height: 45px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            opacity: 1;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg-blobs {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: float 20s infinite alternate;
+        }
+
+        .blob-1 { width: 400px; height: 400px; top: -100px; right: -100px; background: var(--primary); }
+        .blob-2 { width: 300px; height: 300px; bottom: -50px; left: -50px; background: var(--teal); }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 100px) scale(1.1); }
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+        }
+
+        .hero-image-card {
+            width: 100%;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: var(--transition);
+        }
+
+        .hero-image-card:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .hero-image-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* --- ABOUT --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .about-mini-card {
+            padding: 2rem;
+            height: 100%;
+        }
+
+        .about-mini-card svg {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* --- SERVICES --- */
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        [data-theme="dark"] .service-card:hover {
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        /* --- PROJECTS HUB --- */
+        .projects-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            gap: 1.5rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            padding-left: 3rem;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-main);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(13, 92, 159, 0.1);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .status-pill {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .status-active { background: #E0F2FE; color: #0369A1; }
+        .status-completed { background: #DCFCE7; color: #15803D; }
+        .status-planned { background: #F1F5F9; color: #475569; }
+
+        /* --- AUTOMATION TOOLS --- */
+        .tool-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        .tool-controls {
+            padding: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            background: var(--bg-light);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .output-card {
+            padding: 3rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(13, 92, 159, 0.03) 0%, rgba(30, 142, 137, 0.03) 100%);
+            position: relative;
+        }
+
+        .message-bubble {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px 20px 20px 0;
+            box-shadow: var(--shadow);
+            color: #333;
+            max-width: 90%;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        [data-theme="dark"] .message-bubble {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .lesson-container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 3rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--navy);
+            color: white;
+            padding: 80px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-logo img {
+            height: 60px;
+            margin-bottom: 1.5rem;
+            filter: brightness(0) invert(1);
+        }
+
+        .footer-links h4 {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--yellow);
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .hero-grid, .about-grid, .tool-layout, .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero { text-align: center; }
+            .hero-content p { margin-left: auto; margin-right: auto; }
+            .hero-image-card { transform: none; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- STICKY NAVBAR -->
+    <header id="header">
+        <nav class="container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="RDMS Logo" onerror="this.src='https://via.placeholder.com/150x50?text=RDMS+Logo'">
+                <span>RDMS</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#preventive">Prevention</a></li>
+                <li><a href="#academy">Academy</a></li>
+                <li><a href="#impact">Impact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+                <a href="#contact" class="btn btn-primary">Join RDMS</a>
+                <button class="mobile-menu-btn">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero" id="home">
+            <div class="hero-bg-blobs">
+                <div class="blob blob-1"></div>
+                <div class="blob blob-2"></div>
+            </div>
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <div class="badge badge-blue">Community-Driven • Research-Led</div>
+                    <h1>Transforming <span class="text-gradient">Oral Health</span> and Care in Rwanda</h1>
+                    <p>RDMS – Dento-Medical Society Rwanda is a leading platform dedicated to school-based screening, preventive care programs, and advanced dental research education across the nation.</p>
+                    <div class="hero-actions">
+                        <a href="#services" class="btn btn-primary" style="margin-right: 1rem;">Explore Programs</a>
+                        <a href="#academy" class="btn btn-outline">Join Academy</a>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card glass">
+                            <span class="stat-number" data-count="50">0</span>
+                            <span class="stat-label">Communities Reached</span>
+                        </div>
+                        <div class="stat-card glass">
+                            <span class="stat-number" data-count="1200">0</span>
+                            <span class="stat-label">Students Engaged</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image-wrapper">
+                    <div class="hero-image-card">
+                        <img src="community.jpg" alt="RDMS Community Outreach" onerror="this.src='https://via.placeholder.com/800x600?text=RDMS+Outreach'">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section class="section-padding" id="about">
+            <div class="container about-grid">
+                <div class="reveal">
+                    <h2 style="margin-bottom: 1.5rem;">Our Mission & Vision</h2>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted);">RDMS serves as a vital bridge between clinical dental medicine, academic research, and grassroots community outreach. We believe that oral health is a fundamental pillar of general well-being.</p>
+                    <p style="margin-bottom: 2rem; color: var(--text-muted);">Through our integrated approach, we empower dental students and professionals to lead impactful screening programs and contribute to global dental science from a Rwandan perspective.</p>
+                    <a href="#" class="btn btn-outline">Read Our Full Story</a>
+                </div>
+                <div class="about-cards">
+                    <div class="about-mini-card glass reveal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                        <h3>Education</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">Empowering the next generation of dental leaders.</p>
+                    </div>
+                    <div class="about-mini-card glass reveal" style="margin-top: 2rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <h3>Research</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">Data-driven insights for better public health policy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section class="section-padding" id="services" style="background: rgba(13, 92, 159, 0.02);">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Professional Services</h2>
+                    <p>Comprehensive oral health solutions ranging from field screenings to advanced academic research.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card glass reveal" onclick="openModal('screening')">
+                        <span class="service-icon">🦷</span>
+                        <h3>School-Based Dental Screenings</h3>
+                        <p style="color: var(--text-muted);">Early detection and awareness programs delivered directly to schools across Rwanda.</p>
+                        <button class="btn btn-outline" style="margin-top: 1.5rem;">Learn More</button>
+                    </div>
+                    <div class="service-card glass reveal" onclick="openModal('prevention')">
+                        <span class="service-icon">🛡️</span>
+                        <h3>Preventive Care Programs</h3>
+                        <p style="color: var(--text-muted);">Proactive hygiene education and community health initiatives to prevent oral diseases.</p>
+                        <button class="btn btn-outline" style="margin-top: 1.5rem;">Learn More</button>
+                    </div>
+                    <div class="service-card glass reveal" onclick="openModal('research')">
+                        <span class="service-icon">📊</span>
+                        <h3>Oral Health Research</h3>
+                        <p style="color: var(--text-muted);">Systematic data collection and analysis to advance dental science in the region.</p>
+                        <button class="btn btn-outline" style="margin-top: 1.5rem;">Learn More</button>
+                    </div>
+                    <div class="service-card glass reveal" onclick="openModal('chronicles')">
+                        <span class="service-icon">📖</span>
+                        <h3>Dental Medicine Chronicles</h3>
+                        <p style="color: var(--text-muted);">A professional journal documenting field observations and clinical breakthroughs.</p>
+                        <button class="btn btn-outline" style="margin-top: 1.5rem;">Learn More</button>
+                    </div>
+                    <div class="service-card glass reveal" onclick="openModal('academy')">
+                        <span class="service-icon">🎓</span>
+                        <h3>RDMS Research Academy</h3>
+                        <p style="color: var(--text-muted);">Capacity building and specialized training for dental researchers and students.</p>
+                        <button class="btn btn-outline" style="margin-top: 1.5rem;">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS HUB -->
+        <section class="section-padding" id="projects">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Projects & Daily Activities</h2>
+                    <p>Monitoring our ongoing commitment to community health and academic excellence.</p>
+                </div>
+                
+                <div class="projects-controls glass reveal" style="padding: 1.5rem; border-radius: 50px;">
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="community">Community</button>
+                        <button class="filter-btn" data-filter="research">Research</button>
+                        <button class="filter-btn" data-filter="education">Education</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="project-search" placeholder="Search activities...">
+                    </div>
+                </div>
+
+                <div class="projects-grid" id="projects-grid">
+                    <!-- JS will populate these -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PREVENTIVE CARE AUTOMATION -->
+        <section class="section-padding" id="preventive" style="background: rgba(30, 142, 137, 0.02);">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="badge badge-teal">Smart Health Tools</div>
+                    <h2>Preventive Care Automation</h2>
+                    <p>Automated daily message generation to keep our community informed and healthy.</p>
+                </div>
+
+                <div class="tool-layout">
+                    <div class="tool-controls glass reveal">
+                        <div class="form-group">
+                            <label>Target Audience</label>
+                            <select class="form-select" id="msg-audience">
+                                <option value="children">School Children</option>
+                                <option value="parents">Parents</option>
+                                <option value="teenagers">Teenagers</option>
+                                <option value="general">General Community</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Goal</label>
+                            <select class="form-select" id="msg-goal">
+                                <option value="brushing">Brushing Reminder</option>
+                                <option value="nutrition">Nutrition Advice</option>
+                                <option value="checkup">Checkup Reminder</option>
+                                <option value="hygiene">Hygiene Tip</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tone</label>
+                            <select class="form-select" id="msg-tone">
+                                <option value="friendly">Friendly & Warm</option>
+                                <option value="professional">Professional</option>
+                                <option value="motivational">Motivational</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="generateMessage()">Generate Daily Message</button>
+                    </div>
+
+                    <div class="output-card glass reveal">
+                        <div id="message-output">
+                            <div class="message-bubble">
+                                <p>Select your criteria and click generate to create a professional preventive care message.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-outline" onclick="copyMessage()">Copy Text</button>
+                            <button class="btn btn-outline" onclick="generateMessage()">Generate Another</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESEARCH ACADEMY -->
+        <section class="section-padding" id="academy">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>RDMS Research Academy</h2>
+                    <p>Empowering the dental workforce through automated lessons and research mentorship.</p>
+                </div>
+
+                <div class="tool-layout" style="grid-template-columns: 1.2fr 1fr;">
+                    <div class="output-card glass reveal" style="order: 2;">
+                        <div id="lesson-output">
+                            <div class="lesson-container">
+                                <h3 style="margin-bottom: 1rem;">Academy Portal</h3>
+                                <p>Our academy provides on-demand lessons in dental research methodology and clinical practice. Select a topic to generate a micro-lesson.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tool-controls glass reveal" style="order: 1;">
+                        <div class="form-group">
+                            <label>Lesson Topic</label>
+                            <select class="form-select" id="lesson-topic">
+                                <option value="basics">Oral Health Basics</option>
+                                <option value="screening">Community Screening Methods</option>
+                                <option value="public">Dental Public Health</option>
+                                <option value="ethics">Research Ethics</option>
+                                <option value="data">Rural Data Collection</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Difficulty Level</label>
+                            <select class="form-select" id="lesson-level">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="generateLesson()">Generate Lesson Module</button>
+                        <p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted);">* Academy credits are awarded upon completion of quiz questions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IMPACT SECTION -->
+        <section class="section-padding" id="impact" style="background: var(--navy); color: white;">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="reveal">
+                        <h2 style="color: var(--yellow); margin-bottom: 1.5rem;">Making a Real Difference</h2>
+                        <p style="margin-bottom: 2rem; opacity: 0.8;">Our World Ectodermal Dysplasia Day event showcased the power of community. We raised awareness and strengthened coordinated support for individuals and families across Rwanda and beyond.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div>
+                                <h3 style="color: var(--yellow); font-size: 2rem;">95%</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">Participant satisfaction in our community workshops.</p>
+                            </div>
+                            <div>
+                                <h3 style="color: var(--yellow); font-size: 2rem;">12+</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">Ongoing research projects in various Rwandan districts.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <div class="hero-image-card" style="transform: rotate(2deg);">
+                            <img src="community.jpg" alt="RDMS Impact Photo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section class="section-padding" id="contact">
+            <div class="container" style="max-width: 800px;">
+                <div class="section-header reveal">
+                    <h2>Get In Touch</h2>
+                    <p>Whether you want to volunteer, partner, or learn more about our research, we'd love to hear from you.</p>
+                </div>
+                <form class="glass reveal" style="padding: 3rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" class="form-input" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" class="form-input" placeholder="john@example.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <select class="form-select">
+                            <option>Volunteer Interest</option>
+                            <option>Research Partnership</option>
+                            <option>General Inquiry</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea class="form-input" style="min-height: 150px; resize: none;" placeholder="How can we help?"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content glass" id="modal-content">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="#" class="footer-logo">
+                        <img src="logo.png" alt="RDMS Logo">
+                    </a>
+                    <p style="opacity: 0.7; margin-top: 1rem;">Advancing oral health through screening, research, and education in the heart of Rwanda.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#academy">Academy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Publications</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Newsletters</a></li>
+                        <li><a href="https://x.com/RDMS_rw" target="_blank">Twitter / X</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact Us</h4>
+                    <p style="opacity: 0.7; font-size: 0.9rem;">Kigali, Rwanda</p>
+                    <p style="opacity: 0.7; font-size: 0.9rem;">info@rdmsrwanda.org</p>
+                    <div style="margin-top: 1rem;">
+                        <a href="https://x.com/RDMS_rw" style="margin-right: 1rem;">Twitter</a>
+                        <a href="#">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 RDMS – Dento-Medical Society Rwanda. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* --- STATE --- */
+        const projectsData = [
+            { id: 1, title: "Kigali Primary School Screening", category: "community", date: "Oct 2025", status: "completed", desc: "Conducted dental health checkups for 400+ students in Kigali." },
+            { id: 2, title: "Rural Oral Health Survey", category: "research", date: "Nov 2025", status: "active", desc: "Data collection phase for rural hygiene habits across Eastern Province." },
+            { id: 3, title: "Student Research Workshop", category: "education", date: "Dec 2025", status: "planned", desc: "A 3-day intensive workshop on dental research methodology." },
+            { id: 4, title: "Oral Health Awareness Month", category: "community", date: "Jan 2026", status: "planned", desc: "National campaign focusing on fluoride importance." },
+            { id: 5, title: "Clinical Journal Publication", category: "research", date: "Sep 2025", status: "completed", desc: "Published findings on pediatric dental carries in local districts." },
+            { id: 6, title: "Village Hygiene Campaign", category: "community", date: "Oct 2025", status: "active", desc: "Distributing hygiene kits and conducting education sessions." },
+            { id: 7, title: "Mentorship Program 2026", category: "education", date: "Feb 2026", status: "planned", desc: "Connecting students with senior dental consultants." },
+            { id: 8, title: "Ectodermal Dysplasia Day", category: "community", date: "Feb 20, 2026", status: "completed", desc: "Coordinated support and awareness for affected families." }
+        ];
+
+        const messageTemplates = {
+            brushing: {
+                friendly: "Good morning! Just a quick reminder to give your teeth some love. Brushing for two minutes twice a day keeps the dentist away!",
+                professional: "Daily oral hygiene protocol requires brushing at 12-hour intervals. Ensure you use circular motions for optimal plaque removal.",
+                motivational: "A healthy smile is your best outfit! Start your day by conquering your oral hygiene routine. Your future self will thank you!"
+            },
+            nutrition: {
+                friendly: "Snack smart! Try swapping that sugary soda for crisp apples or water. Your teeth love healthy fuel!",
+                professional: "Sugar intake correlates directly with enamel erosion. We recommend reducing refined carbohydrates to protect your oral health.",
+                motivational: "You are what you eat—and so are your teeth! Fuel your body with nutrients that strengthen your smile."
+            },
+            checkup: {
+                friendly: "Time for a friendly visit! Regular checkups are like a spa day for your teeth. See you soon!",
+                professional: "Biannual clinical examinations are essential for early detection of pathologies. Schedule your assessment today.",
+                motivational: "Don't wait for the pain! Proactive care is the mark of a champion. Book your dental checkup now."
+            }
+        };
+
+        const academyLessons = {
+            basics: {
+                title: "Fundamentals of Enamel Health",
+                objective: "Understand the structure and protection of tooth enamel.",
+                points: ["Enamel is the hardest substance in the human body.", "Acid from food can wear down enamel over time.", "Saliva plays a key role in remineralization."],
+                quiz: "Which substance is responsible for enamel remineralization?"
+            },
+            screening: {
+                title: "Efficient Community Screening",
+                objective: "Learn the standard operating procedure for field screenings.",
+                points: ["Proper lighting is essential for accurate assessment.", "Maintain consistent data recording for all participants.", "Always prioritize patient comfort in field settings."],
+                quiz: "What is the most critical factor for visual screening accuracy?"
+            }
+        };
+
+        /* --- THEME TOGGLE --- */
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            themeBtn.innerHTML = newTheme === 'dark' 
+                ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+                : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+        });
+
+        /* --- SCROLL EFFECTS --- */
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        /* --- STATS COUNTER --- */
+        const observerOptions = { threshold: 0.5 };
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = entry.target;
+                    const countTo = parseInt(target.getAttribute('data-count'));
+                    let current = 0;
+                    const step = Math.ceil(countTo / 50);
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= countTo) {
+                            target.innerText = countTo + "+";
+                            clearInterval(timer);
+                        } else {
+                            target.innerText = current;
+                        }
+                    }, 30);
+                    counterObserver.unobserve(target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat-number').forEach(stat => counterObserver.observe(stat));
+
+        /* --- REVEAL ON SCROLL --- */
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        /* --- PROJECTS LOGIC --- */
+        const projectsGrid = document.getElementById('projects-grid');
+        const searchInput = document.getElementById('project-search');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderProjects(filter = 'all', search = '') {
+            projectsGrid.innerHTML = '';
+            const filtered = projectsData.filter(p => {
+                const matchesFilter = filter === 'all' || p.category === filter;
+                const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
+                return matchesFilter && matchesSearch;
+            });
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'project-card glass reveal active';
+                card.innerHTML = `
+                    <div class="project-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span class="status-pill status-${p.status}">${p.status.toUpperCase()}</span>
+                            <span style="font-size: 0.8rem; opacity: 0.6;">${p.date}</span>
+                        </div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${p.title}</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">${p.desc}</p>
+                    </div>
+                `;
+                projectsGrid.appendChild(card);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => renderProjects(document.querySelector('.filter-btn.active').dataset.filter, e.target.value));
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProjects(btn.dataset.filter, searchInput.value);
+            });
+        });
+
+        /* --- PREVENTIVE CARE GENERATOR --- */
+        function generateMessage() {
+            const goal = document.getElementById('msg-goal').value;
+            const tone = document.getElementById('msg-tone').value;
+            const output = document.getElementById('message-output');
+            
+            const text = messageTemplates[goal]?.[tone] || messageTemplates.brushing.friendly;
+            
+            output.innerHTML = `
+                <div class="message-bubble">
+                    <p>${text}</p>
+                </div>
+            `;
+        }
+
+        function copyMessage() {
+            const text = document.querySelector('.message-bubble p').innerText;
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = text;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Message copied to clipboard!');
+        }
+
+        /* --- ACADEMY GENERATOR --- */
+        function generateLesson() {
+            const topic = document.getElementById('lesson-topic').value;
+            const level = document.getElementById('lesson-level').value;
+            const output = document.getElementById('lesson-output');
+            
+            const lesson = academyLessons[topic] || academyLessons.basics;
+            
+            output.innerHTML = `
+                <div class="lesson-container">
+                    <div class="badge badge-blue">${level.toUpperCase()}</div>
+                    <h3 style="margin-bottom: 0.5rem;">${lesson.title}</h3>
+                    <p style="font-size: 0.9rem; font-style: italic; margin-bottom: 1rem;">Obj: ${lesson.objective}</p>
+                    <ul style="margin-bottom: 1.5rem; padding-left: 1rem;">
+                        ${lesson.points.map(p => `<li style="margin-bottom: 0.5rem;">${p}</li>`).join('')}
+                    </ul>
+                    <div style="background: rgba(13, 92, 159, 0.05); padding: 1rem; border-radius: 12px;">
+                        <p style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">ACADEMY QUIZ:</p>
+                        <p style="font-size: 0.9rem;">${lesson.quiz}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* --- MODAL LOGIC --- */
+        const modal = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+
+        function openModal(type) {
+            modal.style.display = 'flex';
+            let content = '';
+            
+            if(type === 'screening') {
+                content = `
+                    <h3>School-Based Screening</h3>
+                    <p style="margin-top:1rem;">Our mobile clinics visit secondary and primary schools across Rwanda to provide high-quality diagnostic checkups. We focus on early identification of cavities and orthodontic needs.</p>
+                `;
+            } else if(type === 'prevention') {
+                content = `
+                    <h3>Preventive Programs</h3>
+                    <p style="margin-top:1rem;">Prevention is the core of our mission. We distribute over 5,000 hygiene kits annually and run workshops for local healthcare workers on non-invasive dental techniques.</p>
+                `;
+            } else {
+                content = `<h3>RDMS Service Excellence</h3><p style="margin-top:1rem;">Detailed information about this specific service branch. We are committed to high standards of care and academic integrity.</p>`;
+            }
+
+            modalContent.innerHTML = content + `<button class="btn btn-primary" style="margin-top: 2rem; width:100%" onclick="closeModal()">Close Panel</button>`;
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        /* --- INIT --- */
+        renderProjects();
+        generateLesson(); // Load default lesson
+    </script>
+</body>
+</html>
